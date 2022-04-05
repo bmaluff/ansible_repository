@@ -1,0 +1,10 @@
+---
+  - name: Habilitar el servicio HTTPS en firewalld
+    hosts: all
+    tasks:
+      - name: Habilitar https en firewalld
+        firewalld:
+          service: "https"
+          permanent: yes
+          state: enabled
+          immediate: yes

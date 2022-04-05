@@ -1,0 +1,41 @@
+---
+  - name: instalacion de web server
+    hosts: all
+    tasks:
+      - name: Instalar Repositorio PG 9.4
+        yum:
+          name: http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+          state: present
+
+      - name: Instalar PG 9.4 server
+        yum:
+          name:
+            - postgresql94-server
+            - postgresql94-contrib
+          state: present
+      - name: Inicio seguro de PG 9.4
+        shell:
+          cmd: /usr/pgsql-9.4/bin/postgresql94-setup initdb
+
+      - name: Habilitar el servicio de PG 9.4
+        service:
+          name: postgresql-9.4
+          state: started
+          enabled: yes
+
+      - name: Agregar repositorio de docker
+        yum_repository:
+          name: docker-ce
+          description: Repositorio de Docker
+          baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+
+      - name: Instalar Docker
+        yum:
+          name: docker-ce
+          state: present
+
+      - name: Habilitar el servicio de docker
+        service:
+          name: docker
+          state: started
+          enabled: yes

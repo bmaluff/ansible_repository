@@ -1,0 +1,49 @@
+---
+  - name: Instalacion de Entorno LAMPP
+    hosts: all
+    tasks:
+      - name: Instalar todos los paquetes
+        yum:
+          name:
+            - httpd
+            - firewalld
+            - mariadb-server
+            - mariadb
+            - php
+            - php-mysql
+            - php-bcmath
+            - php-cli
+            - php-common
+            - php-fpm
+            - php-gd
+            - php-devel
+            - php-dba
+          state: latest
+
+      - name: Habilitar http en firewalld
+        firewalld:
+          service: "http"
+          permanent: yes
+          state: enabled
+          immediate: yes
+
+      - name: Habilitar firewalld para startup
+        service:
+          name: firewalld
+          state: started
+          enabled: yes
+
+      - name: Habilitar httpd para startup
+        service:
+          name: httpd
+          state: started
+          enabled: yes
+
+      - name: Habilitar mariadb para startup
+        service:
+          name: mariadb
+          state: started
+          enabled: yes
+
+  - name: Insatlacion Segura de MariaDB
+    import_playbook: secure_mysql_installation.yml

@@ -1,0 +1,30 @@
+---
+  name: Install jenkins
+  host: cicd
+  tasks:
+    - name: add repositories
+      yum_repository:
+        name: jenkins.repo
+        baseurl: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        gpgcheck: yes
+        gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+    - name: upgrade packages
+      yum:
+        name: '*'
+        state: latest
+
+    - name: install java 11 and jenkins
+      yum:
+        name:
+          - java-11-openjdk
+          - jenkins
+        state: present
+
+        notify: daemon_reload
+
+
+  handlers:
+    - name: daemon_reload
+      service: daemon-reload
+      state: restarted
